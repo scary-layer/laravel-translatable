@@ -1,0 +1,26 @@
+{
+    "name": "scary-layer/laravel-translatable",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artur Osipenko",
+            "email": "artur.osipenko@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ScaryLayer\\Translatable\\": "source/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ScaryLayer\\Translatable\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "laravel/framework": "^8.0"
+    }
+}
