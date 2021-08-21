@@ -1,6 +1,6 @@
 <?php
 
-namespace ScaryLayer\Translatable\Trait;
+namespace ScaryLayer\Translatable\Abstraction;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
