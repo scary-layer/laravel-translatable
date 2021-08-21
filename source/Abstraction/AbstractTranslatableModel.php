@@ -26,7 +26,7 @@ abstract class AbstractTranslatableModel extends Model
      */
     public function translations(): HasMany
     {
-        return $this->hasMany($this->translatableModel, 'model_id');
+        return $this->hasMany(static::$translatableModel, 'model_id');
     }
 
     /**
@@ -39,7 +39,7 @@ abstract class AbstractTranslatableModel extends Model
     {
         $parent = parent::getAttribute($property);
 
-        return !$parent && in_array($property, $this->translatable)
+        return !$parent && in_array($property, static::$translatable)
             ? $this->translate($property)
             : $parent;
     }
@@ -54,7 +54,7 @@ abstract class AbstractTranslatableModel extends Model
      */
     public function getTranslatable(): array
     {
-        return $this->translatable;
+        return static::$translatable;
     }
 
     /**
