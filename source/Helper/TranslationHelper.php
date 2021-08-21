@@ -2,12 +2,8 @@
 
 namespace ScaryLayer\Translatable\Helper;
 
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
-use ScaryLayer\Translatable\Interface\TranslatableInterface;
-use ScaryLayer\Translatable\Trait\AbstractTranslatableModel;
+use ScaryLayer\Translatable\Abstraction\AbstractTranslatableModel;
 
 class TranslationHelper
 {

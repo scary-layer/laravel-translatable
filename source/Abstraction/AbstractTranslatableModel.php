@@ -4,6 +4,7 @@ namespace ScaryLayer\Translatable\Abstraction;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use ScaryLayer\Translatable\Abstraction\AbstractTranslationModel;
 use ScaryLayer\Translatable\Helper\TranslationHelper;
 use ScaryLayer\Translatable\Helper\TranslationQueryHelper;
@@ -13,12 +14,12 @@ abstract class AbstractTranslatableModel extends Model
     /**
      * Get list of translatable attributes
      */
-    protected array $translatable;
+    protected static array $translatable;
 
     /**
      * Get translations model name
      */
-    protected string $translatableModel;
+    protected static string $translatableModel;
 
     /**
      * Get list of model translations
@@ -43,6 +44,11 @@ abstract class AbstractTranslatableModel extends Model
             : $parent;
     }
 
+    public static function staticGetTable(): string
+    {
+        return Str::snake(Str::pluralStudly(class_basename(static::class)));
+    }
+
     /**
      * Get list of translatable model attributes
      */
@@ -54,9 +60,9 @@ abstract class AbstractTranslatableModel extends Model
     /**
      * Get new translation model instance
      */
-    public function getTranslationModel(): AbstractTranslationModel
+    public static function getTranslationModel(): AbstractTranslationModel
     {
-        return new $this->translatableModel();
+        return new static::$translatableModel();
     }
 
     /**
@@ -82,8 +88,11 @@ abstract class AbstractTranslatableModel extends Model
     /**
      * Get translation query helper instance
      */
-    public function translationQueryHelper(): TranslationQueryHelper
+    public static function translationQueryHelper(): TranslationQueryHelper
     {
-        return new TranslationQueryHelper($this->getTable(), $this->getTranslationModel()->getTable());
+        return new TranslationQueryHelper(
+            static::staticGetTable(),
+            static::getTranslationModel()->getTable()
+        );
     }
 }
