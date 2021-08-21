@@ -1,6 +1,6 @@
 <?php
 
-namespace ScaryLayer\Translatable;
+namespace ScaryLayer\Translatable\Provider;
 
 use Illuminate\Support\ServiceProvider as SupportServiceProvider;
 

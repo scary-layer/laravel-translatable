@@ -1,16 +1,18 @@
 <?php
 
-namespace ScaryLayer\Translatable;
+namespace ScaryLayer\Translatable\Helper;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use ScaryLayer\Translatable\Interface\TranslatableInterface;
+use ScaryLayer\Translatable\Trait\AbstractTranslatableModel;
 
 class TranslationHelper
 {
     public function __construct(
-        private TranslatableInterface $model
+        private AbstractTranslatableModel $model
     ) {
         //
     }
@@ -40,31 +42,6 @@ class TranslationHelper
         }
 
         return collect($result);
-    }
-
-    /**
-     * Create table for model translations
-     */
-    public function createTable(): void
-    {
-        Schema::create($this->model->getTranslationsTableName(), function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('model_id');
-            $table->string('language', 2);
-            $table->string('field');
-            $table->text('value')->nullable();
-            $table->timestamps();
-
-            $table->unique(['model_id', 'language', 'field']);
-
-            $table->foreign('model_id')
-                ->references('id')
-                ->on($this->model->getTable())
-                ->onDelete('cascade');
-            $table->foreign('language')
-                ->references('code')
-                ->on('languages');
-        });
     }
 
     /**
@@ -98,23 +75,5 @@ class TranslationHelper
         foreach ($data as $field => $values) {
             $this->save($field, $values);
         }
-    }
-
-    /**
-     * Sort by translation relation field
-     */
-    public function sortBy(Builder $query, string $direction, string $property): Builder
-    {
-        return $query
-            ->leftJoin(
-                $this->model->getTranslationsTableName(),
-                sprintf('%s.model_id', $this->model->getTranslationsTableName()),
-                '=',
-                sprintf('%s.id', $this->model->getTable())
-            )
-            ->where('field', $property)
-            ->where('language', app()->getLocale())
-            ->select(sprintf('%s.*', $this->model->getTable()))
-            ->orderBy(sprintf('%s.value', $this->model->getTranslationsTableName()), $direction);
     }
 }

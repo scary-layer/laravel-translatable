@@ -16,11 +16,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ScaryLayer\\Translatable\\ServiceProvider"
+                "ScaryLayer\\Translatable\\Provider\\ServiceProvider"
             ]
         }
     },
     "require": {
+        "php": "^8.0",
         "laravel/framework": "^8.0"
     }
 }

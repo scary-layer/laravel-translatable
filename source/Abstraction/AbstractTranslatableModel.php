@@ -1,11 +1,25 @@
 <?php
 
-namespace ScaryLayer\Translatable;
+namespace ScaryLayer\Translatable\Trait;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use ScaryLayer\Translatable\Abstraction\AbstractTranslationModel;
+use ScaryLayer\Translatable\Helper\TranslationHelper;
+use ScaryLayer\Translatable\Helper\TranslationQueryHelper;
 
-trait Translatable
+abstract class AbstractTranslatableModel extends Model
 {
+    /**
+     * Get list of translatable attributes
+     */
+    protected array $translatable;
+
+    /**
+     * Get translations model name
+     */
+    protected string $translatableModel;
+
     /**
      * Get list of model translations
      */
@@ -30,14 +44,6 @@ trait Translatable
     }
 
     /**
-     * Get translations table name
-     */
-    public function getTranslationsTableName(): string
-    {
-        return (new $this->translatableModel())->getTable();
-    }
-
-    /**
      * Get list of translatable model attributes
      */
     public function getTranslatable(): array
@@ -46,11 +52,11 @@ trait Translatable
     }
 
     /**
-     * Get translation helper instance
+     * Get new translation model instance
      */
-    public function getTranslationHelper(): TranslationHelper
+    public function getTranslationModel(): AbstractTranslationModel
     {
-        return new TranslationHelper($this);
+        return new $this->translatableModel();
     }
 
     /**
@@ -63,5 +69,21 @@ trait Translatable
             ->where('language', $lang ?? app()->getLocale())
             ->first()
             ?->value;
+    }
+
+    /**
+     * Get translation helper instance
+     */
+    public function translationHelper(): TranslationHelper
+    {
+        return new TranslationHelper($this);
+    }
+
+    /**
+     * Get translation query helper instance
+     */
+    public function translationQueryHelper(): TranslationQueryHelper
+    {
+        return new TranslationQueryHelper($this->getTable(), $this->getTranslationModel()->getTable());
     }
 }
